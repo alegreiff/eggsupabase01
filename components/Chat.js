@@ -5,15 +5,16 @@ const Chat = ({ currentUser, supabase, session }) => {
   console.log("Cha't", currentUser);
   const [messages, setMessages] = useState([]);
   const [editingUserName, setEditingUserName] = useState(false);
+  const [users, setUsers] = useState({});
   const message = useRef("");
-  const newUSername = useRef("");
+  const newUsername = useRef("");
+  console.log("usuarios", users);
   useEffect(() => {
     const getMessages = async () => {
       let { data: messages, error } = await supabase
         .from("message")
         .select("*");
       setMessages(messages);
-      //console.log(messages);
     };
     getMessages();
 
@@ -29,6 +30,25 @@ const Chat = ({ currentUser, supabase, session }) => {
         .subscribe();
     };
     setupMessagesSubscription();
+
+    const setupUsersSubscription = async () => {
+      await supabase
+        .from("usuarios")
+        .on("UPDATE", (payload) => {
+          setUsers((users) => {
+            const user = users[payload.new.id];
+            if (user) {
+              return Object.assign({}, users, {
+                [payload.new.id]: payload.new,
+              });
+            } else {
+              return users;
+            }
+          });
+        })
+        .subscribe();
+    };
+    setupUsersSubscription();
   }, []);
 
   const sendMessage = async (evt) => {
@@ -45,12 +65,41 @@ const Chat = ({ currentUser, supabase, session }) => {
   };
   const setUsername = async (evt) => {
     evt.preventDefault();
-    const username = newUSername.current.value;
+    const username = newUsername.current.value;
     await supabase
       .from("usuarios")
       .insert([{ ...currentUser, username }], { upsert: true });
-    newUSername.current.value = "";
+    newUsername.current.value = "";
     setEditingUserName(false);
+  };
+
+  useEffect(() => {
+    const getUsersFromSupabase = async (users, userIds) => {
+      const usersToGet = Array.from(userIds).filter((userId) => !users[userId]);
+      if (Object.keys(users).length && usersToGet.length === 0) return users;
+      const { data } = await supabase
+        .from("usuarios")
+        .select("id, username, correo")
+        .in("id", usersToGet);
+
+      const newUsers = {};
+      data.forEach((user) => (newUsers[user.id] = user));
+
+      return Object.assign({}, users, newUsers);
+    };
+
+    const getUsers = async () => {
+      const userIds = new Set(messages.map((message) => message.user_id));
+      const newUsers = await getUsersFromSupabase(users, userIds);
+      setUsers(newUsers);
+    };
+    getUsers();
+    console.log(users);
+  }, [users, messages, supabase]);
+  const username = (user_id) => {
+    const user = users[user_id];
+    if (!user) return "loading";
+    return user.username ? user.username : user.correo;
   };
 
   return (
@@ -68,7 +117,7 @@ const Chat = ({ currentUser, supabase, session }) => {
               type="text"
               placeholder="new username"
               required
-              ref={newUSername}
+              ref={newUsername}
             />
             <button type="submit">Update username</button>
           </form>
@@ -87,7 +136,10 @@ const Chat = ({ currentUser, supabase, session }) => {
       </div>
 
       {messages.map((message) => (
-        <div key={message.id}>{message.content}</div>
+        <div key={message.id}>
+          <span>{username(message.user_id)} </span>
+          {message.content}
+        </div>
       ))}
       <form onSubmit={sendMessage}>
         <input type="text" placeholder="Escríbeme" required ref={message} />
