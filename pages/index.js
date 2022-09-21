@@ -4,7 +4,7 @@ import Auth from "../components/Auth";
 import Chat from "../components/Chat";
 import styles from "../styles/Home.module.css";
 
-export default function Home({ session, supabase }) {
+export default function Home({ currentUser, session, supabase }) {
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     setLoggedIn(!!session);
@@ -19,7 +19,11 @@ export default function Home({ session, supabase }) {
 
       <main className={styles.main}>
         {loggedIn ? (
-          <Chat supabase={supabase} session={session} />
+          <Chat
+            currentUser={currentUser}
+            supabase={supabase}
+            session={session}
+          />
         ) : (
           <Auth supabase={supabase} />
         )}

@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from "react";
+import useSupabase from "../utils/useSupabase";
 
-const Chat = ({ supabase, session }) => {
+const Chat = ({ currentUser, supabase, session }) => {
+  console.log("Cha't", currentUser);
   const [messages, setMessages] = useState([]);
+  const [editingUserName, setEditingUserName] = useState(false);
   const message = useRef("");
-
+  const newUSername = useRef("");
   useEffect(() => {
     const getMessages = async () => {
       let { data: messages, error } = await supabase
@@ -36,14 +39,53 @@ const Chat = ({ supabase, session }) => {
       .from("message")
       .insert([{ content, user_id: session.user.id }]);
     message.current.value = "";
-
-    /* const { data, error } = await supabase
-  .from("message")
-  .insert([{ some_column: "someValue", other_column: "otherValue" }]); */
+  };
+  const logout = () => {
+    supabase.auth.signOut();
+  };
+  const setUsername = async (evt) => {
+    evt.preventDefault();
+    const username = newUSername.current.value;
+    await supabase
+      .from("usuarios")
+      .insert([{ ...currentUser, username }], { upsert: true });
+    newUSername.current.value = "";
+    setEditingUserName(false);
   };
 
   return (
     <div>
+      <h3>Supabase CHAT</h3>
+      <h4>
+        Welcome,{" "}
+        {currentUser?.username ? currentUser.username : session.user.email}
+      </h4>
+
+      <div>
+        {editingUserName ? (
+          <form onSubmit={setUsername}>
+            <input
+              type="text"
+              placeholder="new username"
+              required
+              ref={newUSername}
+            />
+            <button type="submit">Update username</button>
+          </form>
+        ) : (
+          <div>
+            <button
+              onClick={() => {
+                setEditingUserName(true);
+              }}
+            >
+              Edit username
+            </button>
+            <button onClick={logout}>Logout</button>
+          </div>
+        )}
+      </div>
+
       {messages.map((message) => (
         <div key={message.id}>{message.content}</div>
       ))}
