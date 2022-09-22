@@ -4,8 +4,11 @@ import Auth from "../components/Auth";
 import Chat from "../components/Chat";
 import Simple from "../layout/MainLayout";
 import styles from "../styles/Home.module.css";
+import { useAppContext } from "../utils/context/AppContext";
 
 export default function Home({ currentUser, session, supabase }) {
+  const { _eq: equipos } = useAppContext();
+  console.log(equipos);
   const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     setLoggedIn(!!session);

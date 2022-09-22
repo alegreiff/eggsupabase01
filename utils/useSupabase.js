@@ -10,6 +10,7 @@ const supabase = createClient(
 const useSupabase = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [session, setSession] = useState(supabase.auth.session());
+  const [equipos, setEquipos] = useState([]);
 
   supabase.auth.onAuthStateChange(async (_event, session) => {
     if (_event === "SIGNED_OUT") {
@@ -19,6 +20,14 @@ const useSupabase = () => {
   });
 
   useEffect(() => {
+    const getEquipos = async () => {
+      const { data: equipos, error } = await supabase
+        .from("equipos")
+        .select("*");
+
+      setEquipos(equipos);
+    };
+
     const getCurrentUser = async () => {
       if (session?.user.id) {
         const { data: currentUser } = await supabase
@@ -45,10 +54,11 @@ const useSupabase = () => {
     };
 
     getCurrentUser().catch(console.error);
+    getEquipos().catch(console.error);
   }, [session]);
 
   //console.log("CCUU", currentUser);
-  return { currentUser, session, supabase };
+  return { currentUser, session, supabase, equipos };
 };
 
 export default useSupabase;
