@@ -7,9 +7,11 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
+import { useAppContext } from "../utils/context/AppContext";
 
-const UserMenu = ({ currentUser }) => {
-  console.log(currentUser.correo);
+const UserMenu = () => {
+  const { _cu: currentUser } = useAppContext();
+
   return (
     <Menu>
       <MenuButton
@@ -27,7 +29,7 @@ const UserMenu = ({ currentUser }) => {
         />
       </MenuButton>
       <MenuList>
-        <span> {currentUser.correo} </span>
+        <span> {currentUser?.correo} </span>
         <MenuItem>Link 1</MenuItem>
         <MenuItem>Link 2</MenuItem>
         <MenuDivider />

@@ -8,21 +8,23 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
-import useSupabase from "../utils/useSupabase";
+import { useAppContext } from "../utils/context/AppContext";
 
-const Chat = ({ currentUser, supabase, session }) => {
-  console.log("Cha't", currentUser);
+const Chat = () => {
+  const { _cu: currentUser, _sp: supabase, _s: session } = useAppContext();
   const [messages, setMessages] = useState([]);
   const [editingUserName, setEditingUserName] = useState(false);
   const [users, setUsers] = useState({});
   const message = useRef("");
   const newUsername = useRef("");
-  console.log("usuarios", users);
+
   useEffect(() => {
     const getMessages = async () => {
       let { data: messages, error } = await supabase
         .from("message")
-        .select("*");
+        .select("*")
+        .order("created_at", { ascending: true });
+
       setMessages(messages);
     };
     getMessages();
@@ -34,7 +36,6 @@ const Chat = ({ currentUser, supabase, session }) => {
           setMessages((currentMessages) =>
             [].concat(currentMessages, payload.new)
           );
-          console.log("SETTED", payload);
         })
         .subscribe();
     };
@@ -63,7 +64,7 @@ const Chat = ({ currentUser, supabase, session }) => {
   const sendMessage = async (evt) => {
     evt.preventDefault();
     const content = message.current.value;
-    console.log(content);
+
     await supabase
       .from("message")
       .insert([{ content, user_id: session.user.id }]);
@@ -103,7 +104,6 @@ const Chat = ({ currentUser, supabase, session }) => {
       setUsers(newUsers);
     };
     getUsers();
-    console.log(users);
   }, [users, messages, supabase]);
   const username = (user_id) => {
     const user = users[user_id];
@@ -117,8 +117,10 @@ const Chat = ({ currentUser, supabase, session }) => {
         <Box padding="4" bg="blue.400" color="black" maxW="md">
           <h3>Supabase CHAT</h3>
           <h4>
-            Welcome,{" "}
-            {currentUser?.username ? currentUser.username : session.user.email}
+            Welcome,
+            {currentUser?.username
+              ? currentUser?.username
+              : session?.user.email}
           </h4>
 
           <div>

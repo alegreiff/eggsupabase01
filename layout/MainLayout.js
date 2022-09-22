@@ -62,9 +62,7 @@ export default function Simple({ children, currentUser }) {
               ))}
             </HStack>
           </HStack>
-          <Flex alignItems={"center"}>
-            {currentUser ? <UserMenu currentUser={currentUser} /> : <p>Hola</p>}
-          </Flex>
+          <Flex alignItems={"center"}>{currentUser ? <UserMenu /> : ""}</Flex>
         </Flex>
 
         {isOpen ? (

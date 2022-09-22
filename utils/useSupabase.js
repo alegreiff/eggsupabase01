@@ -12,6 +12,9 @@ const useSupabase = () => {
   const [session, setSession] = useState(supabase.auth.session());
 
   supabase.auth.onAuthStateChange(async (_event, session) => {
+    if (_event === "SIGNED_OUT") {
+      setCurrentUser(null);
+    }
     setSession(session);
   });
 
@@ -26,12 +29,10 @@ const useSupabase = () => {
         if (currentUser.length) {
           const foundUser = currentUser[0];
           setCurrentUser(foundUser);
-          console.log("el id es: ", foundUser.id);
 
           const sub = supabase
             .from(`usuarios:id=eq.${foundUser.id}`)
             .on("UPDATE", (payload) => {
-              console.log("Upatéate", payload);
               setCurrentUser(payload.new);
             })
             .subscribe();
