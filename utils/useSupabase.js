@@ -21,9 +21,11 @@ const useSupabase = () => {
 
   useEffect(() => {
     const getPartidos = async () => {
-      const { data: partidos, error } = await supabase.from("fixture").select(
-        `
-        id, ronda,
+      const { data: partidos, error } = await supabase
+        .from("fixture")
+        .select(
+          `
+        id, ronda, fecha,
         LOC:equipos!fixture_loc_fkey (
           nombre, rank, code
         ),
@@ -31,9 +33,16 @@ const useSupabase = () => {
           nombre, rank, code
         )
         `
-      );
+        )
+        .lt("ronda", 4)
+        //.eq("ronda", 5)
+        .order("id");
 
-      console.log(partidos);
+      partidos = partidos.map((elem) => ({
+        ...elem,
+        power: Math.round(elem.LOC.rank + elem.VIS.rank),
+      }));
+      console.log(partidos[4]);
       setPartidos(partidos);
     };
 

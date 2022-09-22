@@ -1,0 +1,21 @@
+td.clase100:nth-last-child(1) {
+    background-color: #24a22c;
+  }
+  
+  td.clase80:nth-last-child(1) {
+    background-color: #ed7e10;
+  }
+  
+  td.clase50:nth-last-child(1) {
+    background-color: #f4e210;
+  }
+  
+  td.clase10:nth-last-child(1) {
+    background-color: #f50b1f;
+  }
+  div.icon {
+    cursor: pointer;
+  }
+  th.centered div {
+    justify-content: center;
+  }
