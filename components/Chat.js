@@ -1,3 +1,10 @@
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+} from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
 import useSupabase from "../utils/useSupabase";
 
@@ -142,8 +149,14 @@ const Chat = ({ currentUser, supabase, session }) => {
         </div>
       ))}
       <form onSubmit={sendMessage}>
-        <input type="text" placeholder="Escríbeme" required ref={message} />
-        <button type="submit">Guarda</button>
+        <FormControl>
+          <FormLabel>Nuevo mensaje</FormLabel>
+          <Input type="text" placeholder="Escríbeme" required ref={message} />
+          <FormHelperText>Sé breve</FormHelperText>
+        </FormControl>
+        <Button type="submit" colorScheme="orange">
+          Enviar mensaje
+        </Button>
       </form>
     </div>
   );
