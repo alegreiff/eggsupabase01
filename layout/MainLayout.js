@@ -1,23 +1,19 @@
 import { ReactNode } from "react";
+import NextLink from "next/link";
+
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
   Link,
   IconButton,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import UserMenu from "./UserMenu";
+import { useAppContext } from "../utils/context/AppContext";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
@@ -36,7 +32,8 @@ const NavLink = ({ children }) => (
   </Link>
 );
 
-export default function Simple({ children, currentUser }) {
+export default function Simple({ children }) {
+  const { _cu: currentUser } = useAppContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -57,9 +54,15 @@ export default function Simple({ children, currentUser }) {
               spacing={4}
               display={{ base: "none", md: "flex" }}
             >
-              {Links.map((link) => (
+              {/* {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
-              ))}
+              ))} */}
+              <NextLink href="/" passHref>
+                <Link>Home</Link>
+              </NextLink>
+              <NextLink href="/partidos" passHref>
+                <Link>partidos</Link>
+              </NextLink>
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>{currentUser ? <UserMenu /> : ""}</Flex>

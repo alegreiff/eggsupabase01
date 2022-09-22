@@ -10,7 +10,7 @@ const supabase = createClient(
 const useSupabase = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [session, setSession] = useState(supabase.auth.session());
-  const [equipos, setEquipos] = useState([]);
+  const [partidos, setPartidos] = useState([]);
 
   supabase.auth.onAuthStateChange(async (_event, session) => {
     if (_event === "SIGNED_OUT") {
@@ -20,12 +20,21 @@ const useSupabase = () => {
   });
 
   useEffect(() => {
-    const getEquipos = async () => {
-      const { data: equipos, error } = await supabase
-        .from("equipos")
-        .select("*");
+    const getPartidos = async () => {
+      const { data: partidos, error } = await supabase.from("fixture").select(
+        `
+        id, ronda,
+        LOC:equipos!fixture_loc_fkey (
+          nombre, rank, code
+        ),
+        VIS:equipos!fixture_vis_fkey (
+          nombre, rank, code
+        )
+        `
+      );
 
-      setEquipos(equipos);
+      console.log(partidos);
+      setPartidos(partidos);
     };
 
     const getCurrentUser = async () => {
@@ -54,11 +63,11 @@ const useSupabase = () => {
     };
 
     getCurrentUser().catch(console.error);
-    getEquipos().catch(console.error);
+    getPartidos().catch(console.error);
   }, [session]);
 
   //console.log("CCUU", currentUser);
-  return { currentUser, session, supabase, equipos };
+  return { currentUser, session, supabase, partidos };
 };
 
 export default useSupabase;

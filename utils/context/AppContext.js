@@ -4,13 +4,13 @@ import useSupabase from "../useSupabase";
 const AppContext = createContext();
 
 export function AppWrapper({ children }) {
-  const { session, currentUser, supabase, equipos } = useSupabase();
+  const { session, currentUser, supabase, partidos } = useSupabase();
   let sharedState = {
     /* whatever you want */ value: 42,
     _s: session,
     _sp: supabase,
     _cu: currentUser,
-    _eq: equipos,
+    _pa: partidos,
   };
 
   return (
