@@ -1,5 +1,7 @@
 import {
+  Box,
   Button,
+  Container,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -111,53 +113,62 @@ const Chat = ({ currentUser, supabase, session }) => {
 
   return (
     <div>
-      <h3>Supabase CHAT</h3>
-      <h4>
-        Welcome,{" "}
-        {currentUser?.username ? currentUser.username : session.user.email}
-      </h4>
+      <Container maxW="2xl" bg="blue.600" centerContent>
+        <Box padding="4" bg="blue.400" color="black" maxW="md">
+          <h3>Supabase CHAT</h3>
+          <h4>
+            Welcome,{" "}
+            {currentUser?.username ? currentUser.username : session.user.email}
+          </h4>
 
-      <div>
-        {editingUserName ? (
-          <form onSubmit={setUsername}>
-            <input
-              type="text"
-              placeholder="new username"
-              required
-              ref={newUsername}
-            />
-            <button type="submit">Update username</button>
-          </form>
-        ) : (
           <div>
-            <button
-              onClick={() => {
-                setEditingUserName(true);
-              }}
-            >
-              Edit username
-            </button>
-            <button onClick={logout}>Logout</button>
+            {editingUserName ? (
+              <form onSubmit={setUsername}>
+                <input
+                  type="text"
+                  placeholder="new username"
+                  required
+                  ref={newUsername}
+                />
+                <button type="submit">Update username</button>
+              </form>
+            ) : (
+              <div>
+                <button
+                  onClick={() => {
+                    setEditingUserName(true);
+                  }}
+                >
+                  Edit username
+                </button>
+                <button onClick={logout}>Logout</button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      {messages.map((message) => (
-        <div key={message.id}>
-          <span>{username(message.user_id)} </span>
-          {message.content}
-        </div>
-      ))}
-      <form onSubmit={sendMessage}>
-        <FormControl>
-          <FormLabel>Nuevo mensaje</FormLabel>
-          <Input type="text" placeholder="Escríbeme" required ref={message} />
-          <FormHelperText>Sé breve</FormHelperText>
-        </FormControl>
-        <Button type="submit" colorScheme="orange">
-          Enviar mensaje
-        </Button>
-      </form>
+          {messages.map((message) => (
+            <div key={message.id}>
+              <span>{username(message.user_id)} </span>
+              {message.content}
+            </div>
+          ))}
+          <form onSubmit={sendMessage}>
+            <FormControl>
+              <FormLabel>Nuevo mensaje</FormLabel>
+              <Input
+                type="text"
+                placeholder="Escríbeme"
+                required
+                ref={message}
+              />
+              <FormHelperText>Sé breve</FormHelperText>
+            </FormControl>
+            <Button type="submit" colorScheme="orange">
+              Enviar mensaje
+            </Button>
+          </form>
+        </Box>
+      </Container>
     </div>
   );
 };
