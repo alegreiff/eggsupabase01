@@ -27,8 +27,3 @@ export default function Home({ currentUser, session, supabase }) {
     </Simple>
   );
 }
-
-/* 
-
-
-*/

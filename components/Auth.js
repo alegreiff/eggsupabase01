@@ -120,6 +120,7 @@ const Auth = ({ supabase }) => {
           p={8}
         >
           <Stack spacing={4}>
+            <Button onClick={signInWithGitHub}>Log in with GitHub</Button>
             <FormControl id="email">
               <FormLabel>Correo electrónico</FormLabel>
               <Input

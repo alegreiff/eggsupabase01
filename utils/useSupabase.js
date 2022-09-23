@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -11,13 +12,39 @@ const useSupabase = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [session, setSession] = useState(supabase.auth.session());
   const [partidos, setPartidos] = useState([]);
+  const router = useRouter();
 
   supabase.auth.onAuthStateChange(async (_event, session) => {
     if (_event === "SIGNED_OUT") {
+      router.push("/");
+      console.log("SALIO EL PERRO");
+
       setCurrentUser(null);
     }
+
     setSession(session);
   });
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        updateSupabaseCookie(event, session);
+      }
+    );
+
+    return () => {
+      authListener?.unsubscribe();
+    };
+  });
+
+  async function updateSupabaseCookie(event, session) {
+    await fetch("/api/auth", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      credentials: "same-origin",
+      body: JSON.stringify({ event, session }),
+    });
+  }
 
   useEffect(() => {
     const getHincha = async () => {
