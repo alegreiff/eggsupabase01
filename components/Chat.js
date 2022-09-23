@@ -19,11 +19,12 @@ const Chat = () => {
   const newUsername = useRef("");
 
   useEffect(() => {
+    console.info("ENtrando al EFFECTRO");
     const getMessages = async () => {
       let { data: messages, error } = await supabase
         .from("message")
         .select("*")
-        .order("created_at", { ascending: true });
+        .order("created_at");
 
       setMessages(messages);
     };
@@ -33,13 +34,14 @@ const Chat = () => {
       await supabase
         .from("message")
         .on("INSERT", (payload) => {
+          console.log("ALGO CAMBIÓ");
           setMessages((currentMessages) =>
             [].concat(currentMessages, payload.new)
           );
         })
         .subscribe();
     };
-    setupMessagesSubscription();
+    setupMessagesSubscription().catch(console.error);
 
     const setupUsersSubscription = async () => {
       await supabase
@@ -59,7 +61,10 @@ const Chat = () => {
         .subscribe();
     };
     setupUsersSubscription();
-  }, []);
+    return () => {
+      console.info("SALIENNDRO");
+    };
+  }, [supabase]);
 
   const sendMessage = async (evt) => {
     evt.preventDefault();
@@ -110,6 +115,10 @@ const Chat = () => {
     if (!user) return "loading";
     return user.username ? user.username : user.correo;
   };
+
+  if (!currentUser?.isPollero) {
+    return <h1>Largo de aquí</h1>;
+  }
 
   return (
     <div>

@@ -20,6 +20,18 @@ const useSupabase = () => {
   });
 
   useEffect(() => {
+    const getHincha = async () => {
+      const { data: listahinchas, error } = await supabase
+        .from("listahinchas")
+        .select(
+          `
+        nombre:unnest
+        `
+        );
+
+      //console.log(listahinchas[0]["enum_range"][4]);
+      console.log(listahinchas);
+    };
     const getPartidos = async () => {
       const { data: partidos, error } = await supabase
         .from("fixture")
@@ -42,7 +54,6 @@ const useSupabase = () => {
         ...elem,
         power: Math.round(elem.LOC.rank + elem.VIS.rank),
       }));
-      console.log(partidos[4]);
       setPartidos(partidos);
     };
 
@@ -58,9 +69,11 @@ const useSupabase = () => {
           setCurrentUser(foundUser);
 
           const sub = supabase
-            .from(`usuarios:id=eq.${foundUser.id}`)
+            //.from(`usuarios:id=eq.${foundUser.id}`)
+            .from("usuarios")
             .on("UPDATE", (payload) => {
               setCurrentUser(payload.new);
+              console.log("Pollero cambió");
             })
             .subscribe();
 
@@ -73,6 +86,7 @@ const useSupabase = () => {
 
     getCurrentUser().catch(console.error);
     getPartidos().catch(console.error);
+    getHincha().catch(console.error);
   }, [session]);
 
   //console.log("CCUU", currentUser);

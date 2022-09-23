@@ -1,4 +1,17 @@
-import { Button, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -86,41 +99,128 @@ const Auth = ({ supabase }) => {
     setIsSignUp((value) => !value);
   };
   return (
-    <div>
-      <Button onClick={signInWithGitHub}>Log in with GitHub</Button>
-      <>
-        <h1>{isSignUp ? "Registro" : "Ingreso"}</h1>
-        <Input
-          variant="outline"
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="correo"
-        />
+    <Flex
+      minH={"100vh"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4xl"}>
+            {isSignUp ? "Crea tu cuenta" : "Ingresa"}
+          </Heading>
+          <Text fontSize={"lg"} color={"gray.600"}>
+            to enjoy all of our cool <Link color={"blue.400"}>features</Link> ✌️
+          </Text>
+        </Stack>
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
+        >
+          <Stack spacing={4}>
+            <FormControl id="email">
+              <FormLabel>Correo electrónico</FormLabel>
+              <Input
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="correo"
+              />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Contraseña</FormLabel>
+              <Input
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mínimo seis caracteres"
+              />
+            </FormControl>
+            <Stack spacing={10}>
+              <Stack
+                direction={{ base: "column", sm: "row" }}
+                align={"start"}
+                justify={"space-between"}
+              ></Stack>
+              {isSignUp && (
+                <Button
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  onClick={handleSignUp}
+                >
+                  Crear cuenta
+                </Button>
+              )}
+              {!isSignUp && (
+                <Button
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  onClick={handleSignIn}
+                >
+                  Ingresar
+                </Button>
+              )}
+              <Button colorScheme="red" onClick={changeForm}>
+                {!isSignUp
+                  ? "¿Nuevo usuario?, regístrese"
+                  : "Ya tengo cuenta. Ingresar"}
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+      {/* <Box>
+        <div>
+          <Button onClick={signInWithGitHub}>Log in with GitHub</Button>
+          <>
+            <h1>{isSignUp ? "Registro" : "Ingreso"}</h1>
+            <Input
+              variant="outline"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="correo"
+            />
 
-        <Input
-          variant="outline"
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
-          type="password"
-        />
-        {isSignUp && (
-          <Button colorScheme="blue" onClick={handleSignUp}>
-            Registro
-          </Button>
-        )}
-        {!isSignUp && (
-          <Button colorScheme="green" onClick={handleSignIn}>
-            Acceso (Log in)
-          </Button>
-        )}
-        <a href="#" onClick={changeForm}>
-          {" "}
-          {!isSignUp
-            ? "Eres nuevo? Regístrate"
-            : "Ya estás registrado?, imgresa"}{" "}
-        </a>
-      </>
-    </div>
+            <Input
+              variant="outline"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="password"
+              type="password"
+            />
+            {isSignUp && (
+              <Button colorScheme="blue" onClick={handleSignUp}>
+                Registro
+              </Button>
+            )}
+            {!isSignUp && (
+              <Button colorScheme="green" onClick={handleSignIn}>
+                Acceso (Log in)
+              </Button>
+            )}
+            <a href="#" onClick={changeForm}>
+              {" "}
+              {!isSignUp
+                ? "Eres nuevo? Regístrate"
+                : "Ya estás registrado?, imgresa"}{" "}
+            </a>
+          </>
+        </div>
+      </Box> */}
+    </Flex>
   );
 };
 
 export default Auth;
+
+/* 
+
+*/
+
+/* 
+
+*/

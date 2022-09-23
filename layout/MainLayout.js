@@ -10,6 +10,7 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Container,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import UserMenu from "./UserMenu";
@@ -37,7 +38,7 @@ export default function Simple({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <>
+    <Container maxW="container.xl">
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
@@ -80,6 +81,6 @@ export default function Simple({ children }) {
       </Box>
 
       <Box p={4}>{children}</Box>
-    </>
+    </Container>
   );
 }
