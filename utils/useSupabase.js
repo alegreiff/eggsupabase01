@@ -22,6 +22,8 @@ const useSupabase = () => {
 
       setCurrentUser(null);
     }
+    console.log("upadates");
+    updateSupabaseCookie(_event, session);
 
     setSession(session);
   });
