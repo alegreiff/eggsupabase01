@@ -39,7 +39,7 @@ const useSupabase = () => {
   });
 
   async function updateSupabaseCookie(event, session) {
-    await fetch("/api/auth", {
+    await fetch("/api/auth/callback", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       credentials: "same-origin",

@@ -126,7 +126,7 @@ export default function Jefe({ user, perfil }) {
   );
 }
 
-export async function getServerSideProps({ req }) {
+/* export async function getServerSideProps({ req }) {
   const { user } = await supabase.auth.api.getUserByCookie(req);
   if (!user) {
     return { props: {}, redirect: { destination: "/" } };
@@ -144,7 +144,7 @@ export async function getServerSideProps({ req }) {
   }
 
   return { props: { user, perfil } };
-}
+} */
 
 /* 
 [{"id":"5a47d784-6ea8-4864-9ecf-22b2f07a0e83","created_at":"2022-09-22T01:30:23+00:00","username":"Ja Y me","correo":"a.legreiff@gmail.com","isPollero":true,"favorito":2,"hincha":"Independiente Santa Fe","isPagado":false,"alias":"Jardinero"}]

@@ -49,6 +49,9 @@ const UserMenu = () => {
             <NextLink href="/perfil/yo" passHref>
               <Link>Perfil</Link>
             </NextLink>
+            <NextLink href="/perfil/test" passHref>
+              <Link>Test</Link>
+            </NextLink>
           </MenuItem>
           <MenuDivider />
           <MenuItem>Link 3</MenuItem>
