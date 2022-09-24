@@ -17,7 +17,7 @@ const useSupabase = () => {
 
   supabase.auth.onAuthStateChange(async (_event, session) => {
     if (_event === "SIGNED_OUT") {
-      router.push("/");
+      //router.push("/");
       console.log("SALIO EL PERRO");
 
       setCurrentUser(null);

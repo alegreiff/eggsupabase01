@@ -11,12 +11,15 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { useAppContext } from "../utils/context/AppContext";
+import { useRouter } from "next/router";
 
 const UserMenu = () => {
+  const router = useRouter();
   const { _cu: currentUser, _sp: supabase } = useAppContext();
 
   const handleLogout = () => {
     supabase.auth.signOut();
+    router.push("/api/auth/logout");
   };
 
   return (
