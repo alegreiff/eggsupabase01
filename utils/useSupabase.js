@@ -12,6 +12,7 @@ const useSupabase = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [session, setSession] = useState(supabase.auth.session());
   const [partidos, setPartidos] = useState([]);
+  const [equipos, setEquipos] = useState([]);
   const router = useRouter();
 
   supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -57,7 +58,8 @@ const useSupabase = () => {
         );
 
       //console.log(listahinchas[0]["enum_range"][4]);
-      console.log(listahinchas);
+      //console.log(listahinchas);
+      setEquipos(listahinchas);
     };
     const getPartidos = async () => {
       const { data: partidos, error } = await supabase
@@ -117,7 +119,7 @@ const useSupabase = () => {
   }, [session]);
 
   //console.log("CCUU", currentUser);
-  return { currentUser, session, supabase, partidos };
+  return { currentUser, session, supabase, partidos, equipos };
 };
 
 export default useSupabase;
